@@ -47,12 +47,13 @@ public class Scheduler {
             //finding next highest priority
             for(int j=i; j<arr.length; j++)
             {
-                if(arr[j].processtime < arr[shortest].processtime)
+                if(copy[j].processtime < copy[shortest].processtime)
                 {
                     shortest = j;
                 }
             }
 
+            //swapping object reference values
             temp = copy[i];
             copy[i] = copy[shortest];
             copy[shortest] = temp;
@@ -112,8 +113,56 @@ public class Scheduler {
 
     void RR()
     {
-        //write code here
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\nImplementing Round Robin: \n\nSCHEDULING ORDER IS AS FOLLOWS: ");
+
+        //calculating wait time
+        float waitime = 0;
+        //for average wait time calculation
+        float avg = 0;
+
+        //making a copy of process array
+        Process copy[] = new Process[arr.length];
+        System.arraycopy(arr, 0, copy, 0, arr.length);
+
+        //checking for total processed tasks
+        int processed = 0;
+        int CPU_time;
+        System.out.print("Enter the CPU cycle length: ");
+        CPU_time = sc.nextInt();
+        while(processed!= arr.length)
+        {
+            for(int i = 0; i< arr.length; i++)
+            {
+                if(copy[i].processtime > 0)
+                {   
+                    copy[i].processtime -= CPU_time;
+                    if(copy[i].processtime <= 0)
+                    {
+                        processed++;
+                        System.out.print("Task Completed!");
+                        arr[i].describe();
+                        System.out.println("Turnaround time is: " + waitime);
+                        waitime += CPU_time + copy[i].processtime;
+                    }
+                    waitime += CPU_time;
+                }
+            }
+        }
+
+        //total processing time required
+        int sum = 0;
+        for(int i = 0; i< arr.length; i++)
+        {
+            sum += arr[i].processtime;
+        }
+
+        //printing the average wait time for RR method
+        //(length of schedule - sum of all processing times)/number of processes in ready queue
+        System.out.println("\nAvg wait time: "+ ((waitime - sum)/arr.length));
     }
+
+    //implementing main function
     public static void main(String[] args) throws Exception {
 
         // accepting all the processes from the user as input
@@ -167,3 +216,25 @@ public class Scheduler {
         System.out.println("\nThank you!");
     }
 }
+
+
+/*DEFAULT TESTCASE for testing 
+
+5
+q1
+10
+5
+q2
+8
+4
+q3
+2
+1
+q4
+6
+3
+q5
+1
+0
+ 
+*/
