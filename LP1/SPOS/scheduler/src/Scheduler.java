@@ -11,30 +11,103 @@ public class Scheduler {
     }
 
     //function for implementing a FCFS scheduling algorithm 
+    //non-pre emptive
     void FCFS ()
     {
         System.out.println("\nImplementing FCFS: \n\nSCHEDULING ORDER IS AS FOLLOWS: ");
         float waitime = 0;
+        float avg = 0;
         for (int i = 0; i < arr.length; i++)
-        {    int num;
-
+        {
             arr[i].describe();
             System.out.println("Waited for: "+ waitime+" cycles");
             waitime += arr[i].processtime;
+            avg += waitime;
         }
-        System.out.println("\nAvg wait time: "+ waitime/arr.length);
+        System.out.println("\nAvg wait time: "+ avg/arr.length);
     }
 
 
     //function for implementing a SJF algorithm
+    //assuming that arrival time of all processes is the same
     void SJF()
     {
-        //write code here
+        System.out.println("\nImplementing SJF: \n\nSCHEDULING ORDER IS AS FOLLOWS: ");
+        float waitime = 0;
+        float avg = 0;
+        
+        Process copy[] = new Process[arr.length];
+        System.arraycopy(arr, 0, copy, 0, arr.length);
+
+        //sorting the list by waitime
+        for (int i = 0; i < arr.length; i++)
+        {
+            int shortest = i;
+            Process temp;
+            //finding next highest priority
+            for(int j=i; j<arr.length; j++)
+            {
+                if(arr[j].processtime < arr[shortest].processtime)
+                {
+                    shortest = j;
+                }
+            }
+
+            temp = copy[i];
+            copy[i] = copy[shortest];
+            copy[shortest] = temp;
+        }
+
+        for (int i = 0; i < arr.length; i++)
+        {
+            copy[i].describe();
+            System.out.println("Waited for: "+ waitime+" cycles");
+            waitime += copy[i].processtime;
+            avg += waitime;
+        }
+
+        System.out.println("\nAvg wait time: "+ avg/arr.length);
+
+
     }
 
     void PBS()
     {
-        //write code here
+        System.out.println("\nImplementing PBS: \n\nSCHEDULING ORDER IS AS FOLLOWS: ");
+        float waitime = 0;
+        float avg = 0;
+        Process copy[] = new Process[arr.length];
+        System.arraycopy(arr, 0, copy, 0, arr.length);
+
+        //sorting the list by priority
+        for (int i = 0; i < arr.length; i++)
+        {
+            int highest = i;
+            Process temp;
+            //finding next highest priority
+            for(int j=i; j<arr.length; j++)
+            {
+                if(arr[j].priority > arr[highest].priority)
+                {
+                    highest = j;
+                }
+            }
+
+            temp = copy[i];
+            copy[i] = copy[highest];
+            copy[highest] = temp;
+        }
+
+        for (int i = 0; i < arr.length; i++)
+        {
+            copy[i].describe();
+            System.out.println("Waited for: "+ waitime+" cycles");
+            waitime += copy[i].processtime;
+            avg += waitime;
+        }
+
+        System.out.println("\nAvg wait time: "+ avg/arr.length);
+        
     }
 
     void RR()
@@ -66,28 +139,31 @@ public class Scheduler {
             choice = sc.nextInt();
 
             switch (choice) {
+                //call for FCFS algorithm
                 case 1:
                     obj.FCFS();
                     break;
-
+                
+                //call for SJF algorithm
                 case 2:
                     obj.SJF();
                     break;
 
+                //call for PBS algorithm
                 case 3:
-                    //obj.PBS();
+                    obj.PBS();
                     break;
 
+                //call for RR algorithm
                 case 4:
-                    //obj.RR();
+                    obj.RR();
                     break;
 
-                default:
-
+                default:    
                     break;
             }
         }
 
-        System.out.println("Thank you!");
+        System.out.println("\nThank you!");
     }
 }
