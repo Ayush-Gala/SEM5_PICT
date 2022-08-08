@@ -6,7 +6,6 @@ public class Process {
     int priority;
     String name;
     int processtime;
-    int arrivaltime;
     static int processnum = 1;
 
     //defualt constructor 
@@ -18,9 +17,15 @@ public class Process {
         processtime = sc.nextInt();
         System.out.print("Enter the priority of "+ name + ": ");
         priority= sc.nextInt();
-        arrivaltime = processnum;
         processnum++;
         System.out.println("Process added to list!");
+    }
+
+    public Process(String nm, int pt, int pr)
+    {
+        name = nm;
+        processtime = pt;
+        priority = pr;
     }
 
     //function that describes the task

@@ -9,7 +9,16 @@ public class Scheduler {
     Scheduler(int count){
         arr = new Process[count];
     }
-
+    
+    //copy constructor
+    public Scheduler(Scheduler S)
+    {
+        arr = new Process[S.arr.length];
+        for(int i=0;i<S.arr.length;i++)
+        {
+            arr[i] = new Process(S.arr[i].name, S.arr[i].processtime, S.arr[i].priority);
+        }
+    }
     //function for implementing a FCFS scheduling algorithm 
     //non-pre emptive
     void FCFS ()
@@ -88,7 +97,7 @@ public class Scheduler {
             //finding next highest priority
             for(int j=i; j<arr.length; j++)
             {
-                if(arr[j].priority > arr[highest].priority)
+                if(copy[j].priority > copy[highest].priority)
                 {
                     highest = j;
                 }
@@ -122,11 +131,10 @@ public class Scheduler {
         float avg = 0;
 
         //making a copy of process array
-        Process copy[] = new Process[arr.length];
-        System.arraycopy(arr, 0, copy, 0, arr.length);
+        Scheduler copy = new Scheduler(this);
 
         //checking for total processed tasks
-        int processed = 0;
+        int processed = 0, sum = 0;
         int CPU_time;
         System.out.print("Enter the CPU cycle length: ");
         CPU_time = sc.nextInt();
@@ -134,32 +142,27 @@ public class Scheduler {
         {
             for(int i = 0; i< arr.length; i++)
             {
-                if(copy[i].processtime > 0)
+                if(copy.arr[i].processtime > CPU_time)
                 {   
-                    copy[i].processtime -= CPU_time;
-                    if(copy[i].processtime <= 0)
-                    {
-                        processed++;
-                        System.out.print("Task Completed!");
-                        arr[i].describe();
-                        System.out.println("Turnaround time is: " + waitime);
-                        waitime += CPU_time + copy[i].processtime;
-                    }
+                    copy.arr[i].processtime -= CPU_time;
                     waitime += CPU_time;
                 }
+                else if(copy.arr[i].processtime>0)
+                {
+                    waitime+= copy.arr[i].processtime;
+                    sum+=waitime;
+                    copy.arr[i].processtime -= CPU_time;
+                    System.out.print("\nTask Completed!");
+                    arr[i].describe();
+                    System.out.println("Turnaround time is: " + waitime);
+                    processed++;
+                }
             }
-        }
-        
-        //total processing time required
-        int sum = 0;
-        for(int i = 0; i< arr.length; i++)
-        {
-            sum += arr[i].processtime;
         }
 
         //printing the average wait time for RR method
         //(length of schedule - sum of all processing times)/number of processes in ready queue
-        System.out.println("\nAvg wait time: "+ ((waitime - sum)/arr.length));
+        System.out.println("\nAvg wait time: "+ ((sum-waitime)/arr.length));
     }
 
     //implementing main function
