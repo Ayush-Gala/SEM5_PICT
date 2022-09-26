@@ -104,14 +104,7 @@ public class Pass1 {
 
                 code = "(DL,02)\t(C," + size + ")";
                 bw.write(code + "\n");
-                /*
-                 * if(prev.equals("START"))
-                 * {
-                 * lc=lc+size-1;//System.out.println("here");
-                 * 
-                 * }
-                 * else
-                 */ lc = lc + size;
+                lc = lc + size;
                 prev = "";
             }
             if (lookup.getType(parts[1]).equals("IS")) {
