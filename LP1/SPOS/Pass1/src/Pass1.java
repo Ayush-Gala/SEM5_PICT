@@ -1,10 +1,5 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.io.*;
+import java.util.*;
 
 public class Pass1 {
     int lc = 0;
@@ -33,7 +28,7 @@ public class Pass1 {
     }
 
     public void parseFile() throws Exception {
-        String prev = "";
+        //String prev = "";
         String line, code;
         br = new BufferedReader(new FileReader("input.asm"));
         BufferedWriter bw = new BufferedWriter(new FileWriter("IC.txt"));
@@ -48,25 +43,28 @@ public class Pass1 {
                 else
                     SYMTAB.put(parts[0], new TableRow(parts[0], lc, ++symIndex));
             }
-
+            //littab has some literals without lc
             if (parts[1].equals("LTORG")) {
                 int ptr = POOLTAB.get(pooltab_ptr);
                 for (int j = ptr; j < libtab_ptr; j++) {
                     lc++;
-                    LITTAB.set(j, new TableRow(LITTAB.get(j).getSymbol(), lc));
-                    code = "(DL,01)\t(C," + LITTAB.get(j).symbol + ")";
+                    LITTAB.set(j, new TableRow(LITTAB.get(j).getSymbol(), lc, LITTAB.get(j).getIndex()));
+                    code = "(DL,01)\t(C," + LITTAB.get(j).getSymbol() + ")";
                     bw.write(code + "\n");
                 }
                 pooltab_ptr++;
                 POOLTAB.add(libtab_ptr);
             }
+
             if (parts[1].equals("START")) {
                 lc = expr(parts[2]);
                 code = "(AD,01)\t(C," + lc + ")";
                 bw.write(code + "\n");
-                prev = "START";
+                //prev = "START";
             } else if (parts[1].equals("ORIGIN")) {
                 lc = expr(parts[2]);
+
+                //to print line to file
                 String splits[] = parts[2].split("\\+"); // Same for - SYMBOL //Add code
                 code = "(AD,03)\t(S," + SYMTAB.get(splits[0]).getIndex() + ")+" + Integer.parseInt(splits[1]);
                 bw.write(code + "\n");
@@ -95,6 +93,7 @@ public class Pass1 {
 
             if (parts[1].equals("DC")) {
                 lc++;
+                //parts[2] = parts[2].replace("'","");
                 int constant = Integer.parseInt(parts[2].replace("'", ""));
                 code = "(DL,01)\t(C," + constant + ")";
                 bw.write(code + "\n");
@@ -105,26 +104,30 @@ public class Pass1 {
                 code = "(DL,02)\t(C," + size + ")";
                 bw.write(code + "\n");
                 lc = lc + size;
-                prev = "";
+                //prev = "";
             }
             if (lookup.getType(parts[1]).equals("IS")) {
                 code = "(IS,0" + lookup.getCode(parts[1]) + ")\t";
                 int j = 2;
                 String code2 = "";
                 while (j < parts.length) {
+                    //if it is register
                     parts[j] = parts[j].replace(",", "");
                     if (lookup.getType(parts[j]).equals("RG")) {
                         code2 += lookup.getCode(parts[j]) + "\t";
                     } else {
+                        //if it is literal
                         if (parts[j].contains("=")) {
                             parts[j] = parts[j].replace("=", "").replace("'", "");
                             LITTAB.add(new TableRow(parts[j], -1, ++litIndex));
                             libtab_ptr++;
                             code2 += "(L," + (litIndex) + ")";
+                            // existing symbol
                         } else if (SYMTAB.containsKey(parts[j])) {
                             int ind = SYMTAB.get(parts[j]).getIndex();
                             code2 += "(S,0" + ind + ")";
                         } else {
+                            //non-existing symbol
                             SYMTAB.put(parts[j], new TableRow(parts[j], -1, ++symIndex));
                             int ind = SYMTAB.get(parts[j]).getIndex();
                             code2 += "(S,0" + ind + ")";
@@ -204,7 +207,7 @@ public class Pass1 {
             temp = SYMTAB.get(splits[0]).getAddess() + Integer.parseInt(splits[1]);
         } else if (str.contains("-")) {
             String splits[] = str.split("\\-");
-            temp = SYMTAB.get(splits[0]).getAddess() - (Integer.parseInt(splits[1]));
+            temp = SYMTAB.get(splits[0]).getAddess() - Integer.parseInt(splits[1]);
         } else {
             temp = Integer.parseInt(str);
         }

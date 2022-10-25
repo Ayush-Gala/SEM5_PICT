@@ -18,7 +18,7 @@ public class TableRow {
     }
 
     public TableRow(String symbol, int addess, int index) {
-        super();
+        // super();
         this.symbol = symbol;
         this.addess = addess;
         this.index = index;
