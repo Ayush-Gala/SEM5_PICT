@@ -57,7 +57,7 @@ public class Pass1 {
             }
 
             if (parts[1].equals("START")) {
-                lc = expr(parts[2]);
+                lc = Integer.parseInt(parts[2]);
                 code = "(AD,01)\t(C," + lc + ")";
                 bw.write(code + "\n");
                 //prev = "START";
