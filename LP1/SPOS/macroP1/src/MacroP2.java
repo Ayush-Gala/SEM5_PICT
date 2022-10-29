@@ -1,3 +1,4 @@
+//comment out the below line if you are coding using VSCODE
 package macroP1;
 
 import java.io.BufferedReader;
