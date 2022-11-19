@@ -1,5 +1,3 @@
-//comment out the below line if you are coding using VSCODE
-package macroP1;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,10 +8,10 @@ import java.util.Vector;
 public class MacroP2 {
 
 	public static void main(String[] args) throws Exception {
-		BufferedReader irb=new BufferedReader(new FileReader("intermediate.txt"));
-		BufferedReader mdtb=new BufferedReader(new FileReader("mdt.txt"));
-		BufferedReader kpdtb=new BufferedReader(new FileReader("kpdt.txt"));
-		BufferedReader mntb=new BufferedReader(new FileReader("mnt.txt"));
+		BufferedReader irb=new BufferedReader(new FileReader("intermediate.txt")); //calls
+		BufferedReader mdtb=new BufferedReader(new FileReader("mdt.txt")); //definitions
+		BufferedReader kpdtb=new BufferedReader(new FileReader("kpdt.txt")); //keyword params
+		BufferedReader mntb=new BufferedReader(new FileReader("mnt.txt")); //macro info
 		
 		FileWriter fr=new FileWriter("pass2.txt");
 		
@@ -46,6 +44,7 @@ public class MacroP2 {
 			String []parts=line.split("\\s+");
 			if(mnt.containsKey(parts[0]))
 			{
+				//MNTEntry mntEntry=mnt.get(parts[0]);
 				pp=mnt.get(parts[0]).getPp();
 				kp=mnt.get(parts[0]).getKp();
 				kpdtp=mnt.get(parts[0]).getKpdtp();

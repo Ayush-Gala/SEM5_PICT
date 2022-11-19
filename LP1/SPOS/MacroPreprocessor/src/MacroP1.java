@@ -1,6 +1,3 @@
-//comment out the below line if you are coding using VSCODE
-package macroP1;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -24,7 +21,6 @@ public class MacroP1 {
 		int mdtp=1,kpdtp=0,paramNo=1,pp=0,kp=0,flag=0;
 		while((line=br.readLine())!=null)
 		{
-			
 			String parts[]=line.split("\\s+");
 			if(parts[0].equalsIgnoreCase("MACRO"))
 			{

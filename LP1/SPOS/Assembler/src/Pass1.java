@@ -94,7 +94,7 @@ public class Pass1 {
             if (parts[1].equals("DC")) {
                 lc++;
                 //parts[2] = parts[2].replace("'","");
-                int constant = Integer.parseInt(parts[2].replace("'", ""));
+                int constant = Integer.parseInt(parts[2].replace("'", "").replace("=",""));
                 code = "(DL,01)\t(C," + constant + ")";
                 bw.write(code + "\n");
             } else if (parts[1].equals("DS")) {
@@ -208,7 +208,8 @@ public class Pass1 {
         } else if (str.contains("-")) {
             String splits[] = str.split("\\-");
             temp = SYMTAB.get(splits[0]).getAddess() - Integer.parseInt(splits[1]);
-        } else {
+        }
+        else {
             temp = Integer.parseInt(str);
         }
         return temp;
